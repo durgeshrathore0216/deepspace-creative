@@ -3,7 +3,24 @@ import { Float, Stars } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
-function Core({ reduced }: { reduced: boolean }) {
+type ScenePalette = Record<string, THREE.Color>;
+function readPalette(): ScenePalette {
+  const styles = getComputedStyle(document.documentElement);
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const context = canvas.getContext("2d");
+  const palette: ScenePalette = {};
+  for (const name of ["metal", "wire", "shell", "particles", "ring", "emission", "key", "fill"]) {
+    if (!context) continue;
+    context.fillStyle = styles.getPropertyValue(`--scene-${name}`).trim();
+    context.fillRect(0, 0, 1, 1);
+    const pixel = context.getImageData(0, 0, 1, 1).data;
+    palette[name] = new THREE.Color(`rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+  }
+  return palette;
+}
+function Core({ reduced, palette }: { reduced: boolean; palette: ScenePalette }) {
   const group = useRef<THREE.Group>(null);
   const inner = useRef<THREE.Mesh>(null);
   const positions = useMemo(() => {
@@ -49,7 +66,7 @@ function Core({ reduced }: { reduced: boolean }) {
       <mesh ref={inner}>
         <icosahedronGeometry args={[1.42, 3]} />
         <meshPhysicalMaterial
-          color="#8baee3"
+          color={palette.metal}
           metalness={0.85}
           roughness={0.24}
           transparent
@@ -59,26 +76,32 @@ function Core({ reduced }: { reduced: boolean }) {
       </mesh>
       <mesh>
         <icosahedronGeometry args={[1.46, 3]} />
-        <meshBasicMaterial color="#d5e7ff" wireframe transparent opacity={0.23} />
+        <meshBasicMaterial color={palette.wire} wireframe transparent opacity={0.23} />
       </mesh>
       <mesh>
         <sphereGeometry args={[1.86, 42, 32]} />
-        <meshBasicMaterial color="#7198d8" wireframe transparent opacity={0.14} />
+        <meshBasicMaterial color={palette.shell} wireframe transparent opacity={0.14} />
       </mesh>
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
-        <pointsMaterial color="#5888cf" size={0.025} transparent opacity={0.8} sizeAttenuation />
+        <pointsMaterial
+          color={palette.particles}
+          size={0.025}
+          transparent
+          opacity={0.8}
+          sizeAttenuation
+        />
       </points>
       {[0, 1, 2].map((i) => (
         <mesh key={i} rotation={[Math.PI / 2 + i * 0.6, i * 0.7, i * 0.8]}>
           <torusGeometry args={[2.05 + i * 0.18, 0.013, 8, 160]} />
           <meshStandardMaterial
-            color="#a9cdfc"
+            color={palette.ring}
             metalness={0.7}
             roughness={0.25}
-            emissive="#4273bb"
+            emissive={palette.emission}
             emissiveIntensity={0.3}
           />
         </mesh>
@@ -87,6 +110,7 @@ function Core({ reduced }: { reduced: boolean }) {
   );
 }
 export default function Universe({ reduced = false }: { reduced?: boolean }) {
+  const palette = useMemo(readPalette, []);
   return (
     <Canvas
       dpr={[1, 1.5]}
@@ -96,10 +120,10 @@ export default function Universe({ reduced = false }: { reduced?: boolean }) {
       aria-label="Rotating three-dimensional AI core"
     >
       <ambientLight intensity={1.5} />
-      <directionalLight position={[3, 4, 5]} intensity={3} color="#f6faff" />
-      <pointLight position={[-3, -1, 2]} intensity={15} color="#8abaff" />
+      <directionalLight position={[3, 4, 5]} intensity={3} color={palette.key} />
+      <pointLight position={[-3, -1, 2]} intensity={15} color={palette.fill} />
       <Float speed={reduced ? 0 : 1.2} rotationIntensity={0.1} floatIntensity={0.25}>
-        <Core reduced={reduced} />
+        <Core reduced={reduced} palette={palette} />
       </Float>
       <Stars
         radius={25}

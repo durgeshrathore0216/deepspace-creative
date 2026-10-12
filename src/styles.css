@@ -28,6 +28,14 @@
   --radius-lg: 8px;
 }
 :root {
+  --scene-metal: oklch(0.72 0.08 257);
+  --scene-wire: oklch(0.92 0.035 250);
+  --scene-shell: oklch(0.67 0.1 260);
+  --scene-particles: oklch(0.61 0.12 260);
+  --scene-ring: oklch(0.83 0.075 252);
+  --scene-emission: oklch(0.56 0.12 260);
+  --scene-key: oklch(0.98 0.005 250);
+  --scene-fill: oklch(0.8 0.09 250);
   --background: oklch(0.99 0.002 260);
   --foreground: oklch(0.22 0.025 260);
   --primary: oklch(0.55 0.2 258);
@@ -222,7 +230,7 @@ a:focus-visible {
 .hero-scene {
   position: absolute;
   inset: 112px 0 auto;
-  height: 480px;
+  height: 440px;
   background: var(--core-halo);
 }
 .hero-scene canvas {
@@ -298,8 +306,8 @@ a:focus-visible {
 .hero-bottom {
   position: absolute;
   bottom: 30px;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: space-between;
