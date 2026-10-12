@@ -4,7 +4,7 @@ import pulse from "@/assets/project-pulse.jpg";
 
 // Replace these sample details with your own. Empty URLs never produce dead links.
 export const profile = {
-  name: "Your Name",
+  name: "Durgesh",
   initials: "YN",
   email: "",
   location: "Planet Earth",
