@@ -3,15 +3,20 @@ import { Float, Stars } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
-type ScenePalette = Record<string, THREE.Color>;
+const paletteNames = ["metal", "wire", "shell", "particles", "ring", "emission", "key", "fill"] as const;
+type ScenePalette = Record<(typeof paletteNames)[number], THREE.Color>;
 function readPalette(): ScenePalette {
   const styles = getComputedStyle(document.documentElement);
   const canvas = document.createElement("canvas");
   canvas.width = 1;
   canvas.height = 1;
   const context = canvas.getContext("2d");
-  const palette: ScenePalette = {};
-  for (const name of ["metal", "wire", "shell", "particles", "ring", "emission", "key", "fill"]) {
+  const palette: ScenePalette = {
+    metal: new THREE.Color(), wire: new THREE.Color(), shell: new THREE.Color(),
+    particles: new THREE.Color(), ring: new THREE.Color(), emission: new THREE.Color(),
+    key: new THREE.Color(), fill: new THREE.Color(),
+  };
+  for (const name of paletteNames) {
     if (!context) continue;
     context.fillStyle = styles.getPropertyValue(`--scene-${name}`).trim();
     context.fillRect(0, 0, 1, 1);
