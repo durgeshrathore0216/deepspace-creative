@@ -3,7 +3,6 @@ import { ClientOnly } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowDown,
-  ArrowRight,
   ArrowUpRight,
   Award,
   Check,
@@ -420,14 +419,14 @@ export default function Portfolio() {
                 exit={{ opacity: 0 }}
               >
                 <div>
-                  <h3>{skills[skill].name}</h3>
-                  <p>{skills[skill].description}</p>
-                  <p>{skills[skill].experience}</p>
+                  <h3>{skills[skill]?.name}</h3>
+                  <p>{skills[skill]?.description}</p>
+                  <p>{skills[skill]?.experience}</p>
                 </div>
                 <div>
                   <span className="eyebrow">TECH STACK</span>
-                  <p>{skills[skill].stack}</p>
-                  <p>PROJECT ORBITS — {skills[skill].projects}</p>
+                  <p>{skills[skill]?.stack}</p>
+                  <p>PROJECT ORBITS — {skills[skill]?.projects}</p>
                 </div>
               </motion.div>
             </AnimatePresence>
