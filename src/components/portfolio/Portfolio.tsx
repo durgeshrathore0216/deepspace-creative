@@ -388,7 +388,7 @@ export default function Portfolio() {
               {skills.map((s, index) => (
                 <Reveal key={s.name} className="skill-item">
                   <motion.div
-                    animate={reduced ? {} : { y: [0, -8, 0] }}
+                    animate={reduced ? {} : { rotate: [0, 2, 0, -2, 0] }}
                     transition={{ duration: 5 + index, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <Button
